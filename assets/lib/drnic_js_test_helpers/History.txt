@@ -1,0 +1,27 @@
+== 0.8.1 2008-10-09
+
+* jQuery's Test.Ajax only invokes the mocked url, not all urls that were mocked
+
+== 0.8.0 2008-04-13
+
+* jQuery.ajax mocking
+* upgraded jsunittest to 0.6.1 for ajax bug for test runner
+
+== 0.7.1 2008-02-18
+
+* assertions: assertTagDifference
+
+== 0.7.0 2008-02-16
+
+* ajaxMock: user Ajax.Request.prepareMocks/clearMocks in setup/teardown respectively
+* Improved Event.simulate [thx Juriy Zaytsev]
+* Moved test/*.html -> test/unit/*.html as per newjs 1.1.0
+
+== 0.6.0 2008-02-16
+
+* Added assertDifference/assertNoDifference to test cases
+
+== 0.5.0 2008-02-14
+
+* 1 major enhancement:
+  * Initial release

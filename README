@@ -1,0 +1,48 @@
+RescueJavascriptInPublic
+========================
+
+This plugin helps the javascript/ajax in two ways:
+
+1) It helps prevent javascript from dieing silently in your user's browser:
+Instead, it will attempt to catch errors in a few different ways and send information about the errors back to the rails server (message, stack trace etc.). From there, a controller will raise an exception with details about the javascript error. This allows you to use the ExceptionNotication plugin, FiveRuns or whatever else to log errors and receive notifications.
+
+2) Provides a way for you app to die gracefully:
+The plugin uses modalbox to popup a small modal window informing the user that an error has occurred and that it has been logged. Closing the prompt will reload your application. If this isn't what you want, there is a method that can be overridden to do something else e.g. redirect to another page etc..
+
+
+== How are errors caught?
+
+The plugin can catch exceptions in the following ways:
+
+1) The onerror handler: 
+This is configured by default. It works in IE and Mozilla but not in Safari or Opera. It will catch syntax errors.
+
+2) Registering a Prototype Ajax.Responder for the onException event
+This is configured by defaut. It will catch exceptions occuring during ajax communication and in onSuccess or onComplete
+callbacks. It will not catch 404 or 500 errors. See (3).
+
+3) 
+
+
+2) Via automatically wrapped callbacks if you are using LowPro
+
+3) Custom function wrapping
+
+
+== Install
+
+script/plugin install git://github.com/bxjx/javascript_auto_include.git
+
+
+== Usage
+
+1) Add a route for the controller 
+map.connect '/rescue_javascript_in_public', {:controller => 'rescue_javascript_in_public'}
+
+2) Add the following to the head of your template file
+
+<%=rescue_javascript_in_public_tag %>
+
+== 
+
+<%=rescue_javascript_in_public_tag %>

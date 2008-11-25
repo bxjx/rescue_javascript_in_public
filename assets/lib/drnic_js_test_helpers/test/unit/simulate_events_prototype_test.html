@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>JavaScript unit test file</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script src="../assets/prototype.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../assets/jsunittest.js" type="text/javascript"></script>
+
+  <script src="../../src/simulate_events.js" type="text/javascript"></script>
+  
+  <script type="text/javascript" charset="utf-8">
+    var SimulateEvent = SimulateEvent || {};
+  </script>
+
+  <link rel="stylesheet" href="../assets/unittest.css" type="text/css" />
+</head>
+<body>
+
+<div id="content">
+
+  <div id="header">
+    <h1>JavaScript unit test file</h1>
+    <p>
+      This file tests <strong>simulate_events.js</strong>.
+    </p>
+  </div>
+
+  <!-- Log output (one per Runner, via {testLog: "testlog"} option)-->
+  <div id="testlog"></div>
+  <div id="testlog-element-helpers"></div>
+  
+  <!-- Put sample/test html here -->
+  <div id="sample">
+    <input type="submit" name="button" id="button" onclick="SimulateEvent.lastEvent = 'click'">
+    <select name="select" id="select" onchange="SimulateEvent.lastEvent = 'change'" size="1">
+      <option value="option1">option1</option>
+      <option value="option2">option2</option>
+      
+    </select>
+    <textarea id="textarea"></textarea>
+  </div>
+</div>
+
+<script type="text/javascript">
+// <![CDATA[
+
+  new Test.Unit.Runner({
+    setup: function() {
+      SimulateEvent.lastEvent = null;
+    },
+    // simulate mouse click
+    testSimulateMouseClick: function() { with(this) {
+      assert(!SimulateEvent.lastEvent, 'input should not yet have had onclick triggered');
+      Event.simulate('button', 'click');
+      assertEqual('click', SimulateEvent.lastEvent, 'input should have had onclick triggered');
+    }},
+
+    // simulate mouse click - alternate api
+    testSimulateMouseClickAlternateApi: function() { with(this) {
+      assert(!SimulateEvent.clicked, 'input should not yet have had onclick triggered');
+      Event.simulateMouse('button', 'click');
+      assertEqual('click', SimulateEvent.lastEvent, 'input should have had onclick triggered');
+    }},
+
+    // Simulate select change
+    testSimulateSelectChange: function() { with(this) {
+      assert(!SimulateEvent.changed, 'select should not yet have had onchange triggered');
+      Event.simulate('select', 'change');
+      assertEqual('change', SimulateEvent.lastEvent, 'select should have had onchange triggered');
+    }},
+
+    // Simulate select change - alternate api
+    testSimulateSelectChangeAlterateApi: function() { with(this) {
+      assert(!SimulateEvent.changed, 'select should not yet have had onchange triggered');
+      Event.simulateHtml('select', 'change');
+      assertEqual('change', SimulateEvent.lastEvent, 'select should have had onchange triggered');
+    }},
+    
+    // Simulate all mouse events
+    testSimulateAllMouseEvents: function() { with(this) {
+      // TODO - possibly contextmenu
+      if (typeof Prototype != "undefined") {
+        var events = $w('click dblclick mousedown mousemove mouseout mouseover mouseup');
+        events.each(function(eventName) {
+          $('button')['on' + eventName] = function() {
+            SimulateEvent.lastEvent = eventName;
+          };
+          Event.simulate('button', eventName);
+          assertEqual(eventName, SimulateEvent.lastEvent, 
+            'input should have had on' + eventName + ' triggered');
+        });
+      } else {
+        info("Only for prototype")
+      }
+    }},
+
+    // Simulate all HTML events
+    testSimulateAllHTMLEvents: function() { with(this) {
+      // TODO  resize (window) + scroll
+      if (typeof Prototype != "undefined") {
+        var events = $w('blur change error focus load reset select submit unload');
+        events.each(function(eventName) {
+          $('textarea')['on' + eventName] = function() {
+            SimulateEvent.lastEvent = eventName;
+          };
+          Event.simulate('textarea', eventName);
+          assertEqual(eventName, SimulateEvent.lastEvent, 
+            'textarea should have had on' + eventName + ' triggered');
+        });
+      } else {
+        info("Only for prototype")
+      }
+    }},
+
+  });
+  
+  new Test.Unit.Runner({
+    setup: function() { with(this) {
+      SimulateEvent.lastEvent = null;
+    }},
+      
+    // Input should have click method
+    testInputShouldHaveClickMethod: function() { with(this) {
+      assert(!SimulateEvent.clicked, 'input should not yet have had onclick triggered');
+      $('button')._click();
+      assertEqual('click', SimulateEvent.lastEvent, 'input should have had onclick triggered');
+    }},
+
+    // Select should have change method
+    testSelectShouldHaveChangeMethod: function() { with(this) {
+      assert(!SimulateEvent.changed, 'select should not yet have had onchange triggered');
+      $('select')._change();
+      assertEqual('change', SimulateEvent.lastEvent, 'select should have had onchange triggered');
+    }},
+
+  }, {testLog: "testlog-element-helpers"});
+// ]]>
+</script>
+</body>
+</html>
