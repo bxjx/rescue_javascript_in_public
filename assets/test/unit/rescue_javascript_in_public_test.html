@@ -100,7 +100,6 @@
       failedUrl = "failed_url"
       Test.Ajax.setupMock(failedUrl, function(request, response) {
         response.status = 500;
-        response.responseText = "500 error message"
         request.options.onFailure(response);
       });
       new Ajax.Request(failedUrl, {
@@ -111,7 +110,7 @@
       wait(4000, function(){
         assert(testCase.requestToRescueJavascriptInPublicWasMade, "A request to " + RescueJavascriptInPublic.url + " should have been made");
         assertEqual('ajax_on_failure', testCase.request.options.parameters['error_type']);
-        assertEqual("500 error message", testCase.request.options.parameters['exception']);
+        assertEqual("Ajax request to undefined returned status: 500", testCase.request.options.parameters['exception']);
       });
     }},
 
