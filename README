@@ -11,9 +11,9 @@ This plugin attempts to handle javascript errors with a little grace. When an er
 
 == Logs javascript error in Rails
 
-The other issue with javascript errors in production apps is that they are rarely logged. The often die silently in the user's browser. 
+The other issue with javascript errors in production apps is that they are rarely logged. They often die silently in the user's browser. 
 
-This plugin will instead attempt to communicate details about javascript errors back to your Rails app. Depending on the error and the browser, various details are logged, including the exception message, the event name, details about the event handler code and stack trace. The details are posted to a controller within the plugin that will raise a custom ruby exception. This allows you to log errors and receive notifications using existing rails toosl eg. ExceptionNotication plugin, FiveRuns etc.
+This plugin will instead attempt to communicate details about javascript errors back to your Rails app. Depending on the error and the browser, various details are logged, including the exception message, the event name, details about the event handler code and stack trace. The details are posted to a controller within the plugin that will raise a custom ruby exception. This allows you to log errors and receive notifications using existing rails tools eg. ExceptionNotication plugin, FiveRuns etc.
 
 == How are errors caught?
 
@@ -32,7 +32,7 @@ new Ajax.Request('/url',{
 
 the plugin will catch Ajax failures including 400 and 500 errors.
 
-4) Via wrapped callbacks if you are using LowPro: If using lowpro to unobtrusively add javascript behaviours, errors in the behaviours are automatically caught. This methods allows more details error messages, such as stack traces.
+4) Via wrapped callbacks if you are using LowPro: If using lowpro to unobtrusively add javascript behaviours, errors in the behaviours are automatically caught. This methods allows more details error messages, such as stack traces. For me, this is probably the most useful method of catching errors.
 
 5) Custom function wrapping your handlers: If you're not using lowpro, another option is to wrap your code in the following code:
  
@@ -62,4 +62,8 @@ map.connect '/rescue_javascript_in_public', {:controller => 'rescue_javascript_i
 <%=rescue_javascript_in_public_tag %>
 
 Note: This will only include assets if local_request? is false.
+
+== Future
+
+email b.j.rossiter AT gmail DOT com with feedback and suggestions
 
