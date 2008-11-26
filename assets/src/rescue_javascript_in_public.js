@@ -14,11 +14,13 @@ var RescueJavascriptInPublic = {
   rescueEventHanderException : function(exception, event, observer){
     var error = {
       error_type : 'event_handler_exception',
-      stack : exception.stack,
-      exception : exception.toString(),
-      event_type : event.toString(),
-      observer : observer.toString()
+      exception : exception.message,
+      event_type : event,
+      observer : observer
     }
+    if (exception.stack) error['stack'] = exception.stack;
+    if (exception.file_name) error['file_name'] = exception.fileName;
+    if (exception.description) error['description'] = exception.description;
     this.rescue(error);
   },
 
@@ -26,11 +28,10 @@ var RescueJavascriptInPublic = {
   rescueAjaxException : function(request, exception){
     var error = {
       error_type : 'ajax_callback_exception',
-      exception : exception.toString()
+      exception : exception.message
     };
     if (exception.stack) error['stack'] = exception.stack;
-    if (exception.file_name) error['filename'] = exception.fileName;
-    if (exception.message) error['message'] = exception.message;
+    if (exception.file_name) error['file_name'] = exception.fileName;
     if (exception.description) error['description'] = exception.description;
     this.rescue(error);
   },
@@ -44,7 +45,7 @@ var RescueJavascriptInPublic = {
   rescueAjaxFailure : function(response){
     var error = {
       error_type : 'ajax_on_failure',
-      response : response.responseText
+      exception : "Ajax request to " + response.request.url + " returned status: " + response.status
     };
     this.rescue(error);
   },
@@ -52,10 +53,10 @@ var RescueJavascriptInPublic = {
   // Called when the browsers onerror handler is called.
   rescueOnError : function(message, uri, line){
     var error = {
-      'error_type' :  'on_error',
-      'message' :  message,
-      'uri' : uri,
-      'line' : line
+      error_type :  'on_error',
+      exception :  message,
+      uri : uri,
+      line : line
     };
     this.rescue(error);
     return false;
@@ -100,7 +101,7 @@ var RescueJavascriptInPublic = {
   rescue : function(error){
 		new Ajax.Request(
 			this.url,
-			{method : 'post', parameters : {error : error}}
+			{method : 'post', parameters : error}
 		);
     this.displayMessage();
   },
@@ -138,7 +139,7 @@ if (Ajax && Ajax.Responders){
       if (request.url != RescueJavascriptInPublic.url){
         RescueJavascriptInPublic.rescueAjaxException(request, exception);
       }
-    },
+    }
   });
 }
 

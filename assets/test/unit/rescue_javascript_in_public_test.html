@@ -13,7 +13,7 @@
 	<script type="text/javascript" src="../../lib/drnic_js_test_helpers/src/ajax_mock/prototype.js"></script>
 	<script type="text/javascript" src="../../lib/drnic_js_test_helpers/src/simulate_events.js"></script>
 	<script type="text/javascript" src="../../lib/modalbox1.6.0/modalbox.js"></script>
-	<script type="text/javascript" src="../../rescue_javascript_in_public.js"></script>
+	<script type="text/javascript" src="../../src/rescue_javascript_in_public.js"></script>
 	<link rel="stylesheet" href="../../lib/modalbox1.6.0/modalbox.css" type="text/css" />
 	
 	<link rel="stylesheet" href="../../lib/scriptaculous-js-1.8.2/test/test.css" type="text/css" />
@@ -74,7 +74,7 @@
       RescueJavascriptInPublic.rescueOnError(message, uri, line);
       assert(this.requestToRescueJavascriptInPublicWasMade, "A request to " + RescueJavascriptInPublic.url + " should have been made");
       assertEqual('on_error', this.request.options.parameters['error']['error_type']);
-      assertEqual(message, this.request.options.parameters['error']['message']);
+      assertEqual(message, this.request.options.parameters['error']['exception']);
       assertEqual(uri, this.request.options.parameters['error']['uri']);
       assertEqual(line, this.request.options.parameters['error']['line']);
       wait(4000, function(){}); // let the user close the dialog box
@@ -111,7 +111,7 @@
       wait(4000, function(){
         assert(testCase.requestToRescueJavascriptInPublicWasMade, "A request to " + RescueJavascriptInPublic.url + " should have been made");
         assertEqual('ajax_on_failure', testCase.request.options.parameters['error']['error_type']);
-        assertEqual("500 error message", testCase.request.options.parameters['error']['response']);
+        assertEqual("500 error message", testCase.request.options.parameters['error']['exception']);
       });
     }},
 
